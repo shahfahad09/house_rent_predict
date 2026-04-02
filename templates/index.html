@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>House Rent Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <h2>🏠 Rent Predictor</h2>
+    <div>
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#predict">Predict</a>
+        <a href="#services">Services</a>
+        <a href="#contact">Contact</a>
+        <!-- Navbar me -->
+{% if 'user' in session %}
+    <span>Welcome, {{ user }}</span>
+    <a href="{{ url_for('logout') }}">Logout</a>
+{% endif %}
+    </div>
+</nav>
+<div class="hero">
+    <img src="{{ url_for('static', filename='images/khan.jpg') }}" alt="hero">
+
+    <div class="hero-text">
+        <h1>Find Your Perfect Rent</h1>
+    </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about" class="section">
+    <h1 class="main-title">About Project</h1>
+
+    <div class="image-row">
+        <img src="{{ url_for('static', filename='images/eng1.jpg') }}">
+    </div>
+
+    <h2 class="title">🏠 House Rent Prediction System</h2>
+
+    <p class="project-desc">
+        This project is a Machine Learning-based web application that predicts house rent 
+        based on various features such as BHK, size, location (city), furnishing status, 
+        floor, and number of bathrooms.<br><br>
+
+        The system uses a trained Random Forest model to analyze historical housing data 
+        and provide accurate rent predictions. Users simply enter property details, and 
+        the model instantly estimates the expected rent.<br><br>
+
+        This project is built using Python, Flask, HTML, and CSS. It is designed to be fast, 
+        user-friendly, and helpful for tenants, property owners, and real estate analysis.
+    </p>
+</section>
+
+<section id="predict" class="section">
+    <h1>Predict Rent</h1>
+
+    <div class="pre_image_row">
+        <img src="{{ url_for('static', filename='images/service3.jpg') }}">
+        <img src="{{ url_for('static', filename='images/housepredict.jpg') }}">
+        <img src="{{ url_for('static', filename='images/housepredict2.jpg') }}">
+        <img src="{{ url_for('static', filename='images/service2.jpg') }}">
+    </div>
+
+    <form action="/predict#predict" method="post">
+
+        <!-- INPUT ROW -->
+        <div class="form-row">
+            <input type="number" name="bhk" placeholder="BHK" 
+                   value="{{ form_data.bhk if form_data else '' }}" required>
+
+            <input type="number" name="size" placeholder="Size" 
+                   value="{{ form_data.size if form_data else '' }}" required>
+
+            <input type="number" name="floor" placeholder="Floor" 
+                   value="{{ form_data.floor if form_data else '' }}" required>
+
+            <select name="city">
+                <option>Bangalore</option>
+                <option>Chennai</option>
+                <option>Delhi</option>
+                <option>Hyderabad</option>
+                <option>Kolkata</option>
+                <option>Mumbai</option>
+            </select>
+
+            <select name="furnishing">
+                <option>Furnished</option>
+                <option>Semi-Furnished</option>
+                <option>Unfurnished</option>
+            </select>
+
+            <input type="number" name="bathroom" placeholder="Bathroom" 
+                   value="{{ form_data.bathroom if form_data else '' }}" required>
+        </div>
+
+        <!-- BUTTON (just below inputs) -->
+        <button type="submit" class="predict-btn">Predict</button>
+
+    </form>
+
+    {% if prediction %}
+        <h2 class="result">Estimated Rent: ₹ {{ prediction }}</h2>
+    {% endif %}
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="section">
+    <h1>Our Services</h1>
+    <p>We provide fast and accurate house rent predictions using advanced machine learning. Our system analyzes factors like location, size, and amenities to deliver reliable results. The platform is easy to use and helps users find the best property with smart suggestions.</p>
+
+    <div class="cards">
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/pricepredict.jpg') }}">
+            <h3>Real-Time Price Prediction</h3>
+        </div>
+
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/accurate predict.jpg') }}">
+            <h3>AI-Based Accurate Results</h3>
+        </div>
+
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/easyinterface.png') }}">
+            <h3>Easy & Interactive Interface</h3>
+        </div>
+
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/perproerty.jpg') }}">
+            <h3>Personalized Property Suggestions</h3>
+        </div>
+
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/mlsupport.jpg') }}">
+            <h3>Intelligent Decision Support</h3>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="section">
+    <h1>Get in Touch</h1>
+
+    <div class="contact-box">
+        <form id="contactForm">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+        <!-- Status message dikhane ke liye -->
+        <p id="statusMsg"></p>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+     <p>© 2026 House Rent Predictor | Developed by Shayan, Tanu, Shahfahad</p>
+</footer>
+
+<!-- JS: AJAX submit & status -->
+<script>
+document.getElementById("contactForm").addEventListener("submit", function(e) {
+    e.preventDefault(); // Page reload rok diya
+
+    let formData = new FormData(this);
+
+    fetch("/contact", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        let msg = document.getElementById("statusMsg");
+
+        if (data.status === "success") {
+            msg.innerText = "Message sent successfully!";
+            msg.style.color = "green";
+            document.getElementById("contactForm").reset();
+        } else {
+            msg.innerText = "Failed to send message!";
+            msg.style.color = "red";
+        }
+    })
+    .catch(error => {
+        document.getElementById("statusMsg").innerText = "Error occurred!";
+        document.getElementById("statusMsg").style.color = "red";
+    });
+});
+</script>
+
+
+
+</body>
+</html>
