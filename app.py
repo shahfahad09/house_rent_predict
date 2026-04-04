@@ -427,40 +427,40 @@ def predict():
         return render_template("index.html", prediction="Error")
 
 # ---------------- CONTACT ----------------
-@app.route("/contact", methods=["POST"])
-def contact():
-    if "user" not in session:
-        return jsonify({"status": "fail"})
+# @app.route("/contact", methods=["POST"])
+# def contact():
+#     if "user" not in session:
+#         return jsonify({"status": "fail"})
 
-    try:
-        name = request.form['name']
-        email = request.form['email']
-        message = request.form['message']
+#     try:
+#         name = request.form['name']
+#         email = request.form['email']
+#         message = request.form['message']
 
-        conn = sqlite3.connect("users.db")
-        c = conn.cursor()
+#         conn = sqlite3.connect("users.db")
+#         c = conn.cursor()
 
-        # table create (ek baar chalega)
-        c.execute("""
-        CREATE TABLE IF NOT EXISTS contact(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT,
-            email TEXT,
-            message TEXT
-        )
-        """)
+#         # table create (ek baar chalega)
+#         c.execute("""
+#         CREATE TABLE IF NOT EXISTS contact(
+#             id INTEGER PRIMARY KEY AUTOINCREMENT,
+#             name TEXT,
+#             email TEXT,
+#             message TEXT
+#         )
+#         """)
 
-        c.execute("INSERT INTO contact (name,email,message) VALUES (?,?,?)",
-                  (name, email, message))
+#         c.execute("INSERT INTO contact (name,email,message) VALUES (?,?,?)",
+#                   (name, email, message))
 
-        conn.commit()
-        conn.close()
+#         conn.commit()
+#         conn.close()
 
-        return jsonify({"status": "success"})
+#         return jsonify({"status": "success"})
 
-    except Exception as e:
-        print("CONTACT ERROR:", e)
-        return jsonify({"status": "fail"})
+#     except Exception as e:
+#         print("CONTACT ERROR:", e)
+#         return jsonify({"status": "fail"})
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":
