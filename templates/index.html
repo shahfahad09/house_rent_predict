@@ -15,20 +15,33 @@
         <a href="#predict">Predict</a>
         <a href="#services">Services</a>
         <a href="#contact">Contact</a>
-        <!-- Navbar me -->
-{% if 'user' in session %}
-    <span>Welcome, {{ user }}</span>
-    <a href="{{ url_for('logout') }}">Logout</a>
-{% endif %}
+
+        <!-- USER / ADMIN CONTROL -->
+        {% if 'admin' in session %}
+            <a href="/admin/dashboard">Admin Dashboard</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+
+        {% elif 'user' in session %}
+            <span>Welcome, {{ user }}</span>
+            <a href="{{ url_for('logout') }}">Logout</a>
+
+        {% else %}
+            <a href="/login">Login</a>
+            <a href="/admin">Admin</a>
+        {% endif %}
     </div>
 </nav>
-<div class="hero">
-    <img src="{{ url_for('static', filename='images/khan.jpg') }}" alt="hero">
 
-    <div class="hero-text">
-        <h1>Find Your Perfect Rent</h1>
+<!-- HOME (FIXED) -->
+<section id="home">
+    <div class="hero">
+        <img src="{{ url_for('static', filename='images/khan.jpg') }}" alt="hero">
+
+        <div class="hero-text">
+            <h1>Find Your Perfect Rent</h1>
+        </div>
     </div>
-</div>
+</section>
 
 <!-- ABOUT -->
 <section id="about" class="section">
@@ -54,6 +67,8 @@
     </p>
 </section>
 
+
+<!-- PREDICT -->
 <section id="predict" class="section">
     <h1>Predict Rent</h1>
 
@@ -66,37 +81,39 @@
 
     <form action="/predict#predict" method="post">
 
-        <!-- INPUT ROW -->
         <div class="form-row">
+
             <input type="number" name="bhk" placeholder="BHK" 
-                   value="{{ form_data.bhk if form_data else '' }}" required>
+                   value="{{ form_data.get('bhk','') if form_data else '' }}" required>
 
             <input type="number" name="size" placeholder="Size" 
-                   value="{{ form_data.size if form_data else '' }}" required>
+                   value="{{ form_data.get('size','') if form_data else '' }}" required>
 
             <input type="number" name="floor" placeholder="Floor" 
-                   value="{{ form_data.floor if form_data else '' }}" required>
+                   value="{{ form_data.get('floor','') if form_data else '' }}" required>
 
+            <!-- CITY -->
             <select name="city">
-                <option>Bangalore</option>
-                <option>Chennai</option>
-                <option>Delhi</option>
-                <option>Hyderabad</option>
-                <option>Kolkata</option>
-                <option>Mumbai</option>
+                <option value="Bangalore" {{ 'selected' if form_data and form_data.get('city')=='Bangalore' else '' }}>Bangalore</option>
+                <option value="Chennai" {{ 'selected' if form_data and form_data.get('city')=='Chennai' else '' }}>Chennai</option>
+                <option value="Delhi" {{ 'selected' if form_data and form_data.get('city')=='Delhi' else '' }}>Delhi</option>
+                <option value="Hyderabad" {{ 'selected' if form_data and form_data.get('city')=='Hyderabad' else '' }}>Hyderabad</option>
+                <option value="Kolkata" {{ 'selected' if form_data and form_data.get('city')=='Kolkata' else '' }}>Kolkata</option>
+                <option value="Mumbai" {{ 'selected' if form_data and form_data.get('city')=='Mumbai' else '' }}>Mumbai</option>
             </select>
 
+            <!-- FURNISHING -->
             <select name="furnishing">
-                <option>Furnished</option>
-                <option>Semi-Furnished</option>
-                <option>Unfurnished</option>
+                <option value="Furnished" {{ 'selected' if form_data and form_data.get('furnishing')=='Furnished' else '' }}>Furnished</option>
+                <option value="Semi-Furnished" {{ 'selected' if form_data and form_data.get('furnishing')=='Semi-Furnished' else '' }}>Semi-Furnished</option>
+                <option value="Unfurnished" {{ 'selected' if form_data and form_data.get('furnishing')=='Unfurnished' else '' }}>Unfurnished</option>
             </select>
 
             <input type="number" name="bathroom" placeholder="Bathroom" 
-                   value="{{ form_data.bathroom if form_data else '' }}" required>
+                   value="{{ form_data.get('bathroom','') if form_data else '' }}" required>
+
         </div>
 
-        <!-- BUTTON (just below inputs) -->
         <button type="submit" class="predict-btn">Predict</button>
 
     </form>
@@ -109,7 +126,11 @@
 <!-- SERVICES -->
 <section id="services" class="section">
     <h1>Our Services</h1>
-    <p>We provide fast and accurate house rent predictions using advanced machine learning. Our system analyzes factors like location, size, and amenities to deliver reliable results. The platform is easy to use and helps users find the best property with smart suggestions.</p>
+    <p>
+        We provide fast and accurate house rent predictions using advanced machine learning. 
+        Our system analyzes factors like location, size, and amenities to deliver reliable results. 
+        The platform is easy to use and helps users find the best property with smart suggestions.
+    </p>
 
     <div class="cards">
         <div class="card">
@@ -190,7 +211,6 @@ document.getElementById("contactForm").addEventListener("submit", function(e) {
     });
 });
 </script>
-
 
 
 </body>

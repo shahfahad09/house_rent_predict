@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <h2>🏠 Rent Predictor</h2>
+    <div>
+        <a href="/">Home</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+
+<section class="section">
+    <h1>Admin Dashboard</h1>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>📥 Download Database</h3>
+            <p>Download all registered users data</p>
+            <a href="/download_db">
+                <button>Download DB</button>
+            </a>
+        </div>
+
+        <div class="card">
+            <h3>👥 Users Info</h3>
+            <p>All signup data stored safely</p>
+        </div>
+
+        <div class="card">
+            <h3>🔐 Security</h3>
+            <p>Passwords are encrypted using bcrypt</p>
+        </div>
+
+    </div>
+</section>
+
+<footer>
+    <p>© 2026 House Rent Predictor | Admin Panel</p>
+</footer>
+
+</body>
+</html>

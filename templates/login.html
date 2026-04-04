@@ -23,11 +23,14 @@
           {% endfor %}
         {% endwith %}
         <form method="POST">
-            <input type="text" name="username" placeholder="Email or Phone" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit">Login</button>
-        </form>
+    <input type="text" name="email" placeholder="Email" required>
+    <input type="password" name="password" placeholder="Password" required>
+    <button type="submit">Login</button>
+</form>
         <p>Don't have an account? <a href="/signup">Signup</a></p>
+        <p style="text-align:center; margin-top:15px;">
+    <a href="/admin" style="color:rgba(255, 0, 0, 0.305); font-weight:normal;">Admin Login</a>
+</p>
     </div>
 </body>
 </html>

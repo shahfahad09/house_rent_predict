@@ -1,15 +1,21 @@
-
+from dotenv import load_dotenv
+load_dotenv()
 import os
-from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash, send_file
 import numpy as np
 import joblib
 import smtplib
 import sqlite3
 import bcrypt
 
+
 # ---------------- APP ----------------
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY")  # Render environment variable
+app.secret_key = os.environ.get("SECRET_KEY", "supersecretkey")
+
+# ---------------- ADMIN CONFIG ----------------
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@gmail.com")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123")
 
 # ---------------- DATABASE ----------------
 def init_db():
@@ -46,7 +52,9 @@ def signup():
         password = request.form["password"].encode('utf-8')
         dob = request.form["dob"]
         gender = request.form["gender"]
+
         hashed = bcrypt.hashpw(password, bcrypt.gensalt())
+
         try:
             conn = sqlite3.connect("users.db")
             c = conn.cursor()
@@ -55,31 +63,75 @@ def signup():
                       (first_name, last_name, email, phone, hashed, dob, gender))
             conn.commit()
             conn.close()
+
             flash("Account created! Please login.", "success")
             return redirect(url_for("login"))
+
         except sqlite3.IntegrityError:
             flash("Email or Phone already exists.", "danger")
             return render_template("signup.html")
+
     return render_template("signup.html")
 
 # ---------------- LOGIN ----------------
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"].encode('utf-8')
+        username = request.form.get("email") 
+        password = request.form.get("password").encode('utf-8')
+
         conn = sqlite3.connect("users.db")
         c = conn.cursor()
         c.execute("SELECT password,email FROM users WHERE email=? OR phone=?", (username, username))
         row = c.fetchone()
         conn.close()
-        if row and bcrypt.checkpw(password,row[0]):
-            session["user"] = row[1]  # store email in session
-            return redirect(url_for("home"))
-        else:
-            flash("Invalid credentials","danger")
-            return render_template("login.html")
+
+        if row:
+            stored_password = row[0]
+
+            # HANDLE BOTH CASES (bytes OR string)
+            if isinstance(stored_password, str):
+                stored_password = stored_password.encode('utf-8')
+
+            if bcrypt.checkpw(password, stored_password):
+                session.clear()
+                session["user"] = row[1]
+                return redirect(url_for("home"))
+
+        flash("Invalid credentials", "danger")
+        return render_template("login.html")
+
     return render_template("login.html")
+
+# ---------------- ADMIN LOGIN ----------------
+@app.route("/admin", methods=["GET", "POST"])
+def admin():
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        if email == ADMIN_EMAIL and password == ADMIN_PASSWORD:
+            session.clear()
+            session["admin"] = True
+            return redirect(url_for("admin_dashboard"))
+        else:
+            flash("Wrong admin credentials", "danger")
+
+    return render_template("admin_login.html")
+
+# ---------------- ADMIN DASHBOARD ----------------
+@app.route("/admin/dashboard")
+def admin_dashboard():
+    if not session.get("admin"):
+        return redirect(url_for("admin"))
+    return render_template("admin_dashboard.html")
+
+# ---------------- DOWNLOAD DB ----------------
+@app.route("/download_db")
+def download_db():
+    if not session.get("admin"):
+        return "Unauthorized", 403
+    return send_file("users.db", as_attachment=True)
 
 # ---------------- LOGOUT ----------------
 @app.route("/logout")
@@ -91,8 +143,12 @@ def logout():
 # ---------------- HOME ----------------
 @app.route("/")
 def home():
+    if session.get("admin"):
+        return redirect(url_for("admin_dashboard"))
+
     if "user" not in session:
         return redirect(url_for("login"))
+
     return render_template("index.html", user=session["user"])
 
 @app.route("/about")
@@ -106,19 +162,26 @@ def about():
 def predict():
     if "user" not in session:
         return redirect(url_for("login"))
+
     try:
-        form_data = request.form
+        form_data = request.form.to_dict()   # ✅ FIX
+
         bhk = int(form_data["bhk"])
         size = float(form_data["size"])
         floor = int(form_data["floor"])
         city = city_map[form_data["city"]]
         furnishing = furnishing_map[form_data["furnishing"]]
         bathroom = int(form_data["bathroom"])
-        input_data = np.array([[bhk,size,floor,city,furnishing,bathroom]])
+
+        input_data = np.array([[bhk, size, floor, city, furnishing, bathroom]])
         prediction = np.expm1(model.predict(input_data))[0]
-        return render_template("index.html", prediction=round(prediction), form_data=form_data)
+
+        return render_template("index.html",
+                               prediction=round(prediction),
+                               form_data=form_data)
+
     except:
-        return render_template("index.html", prediction="Error", form_data=request.form)
+        return render_template("index.html", prediction="Error", form_data={})
 
 # ---------------- CONTACT ----------------
 @app.route("/contact", methods=["POST"])
@@ -148,4 +211,4 @@ def contact():
 
 # ---------------- RUN ----------------
 if __name__=="__main__":
-    app.run(host="0.0.0.0",port=5000)
+    app.run(debug=True)
