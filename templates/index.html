@@ -165,53 +165,52 @@
     <h1>Get in Touch</h1>
 
     <div class="contact-box">
-        <form id="contactForm">
-            <input type="text" name="name" placeholder="Your Name" required>
-            <input type="email" name="email" placeholder="Your Email" required>
-            <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+        <form id="contactForm" onsubmit="sendMail(event)">
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="email" id="email" placeholder="Your Email" required>
+            <textarea id="message" placeholder="Your Message" rows="5" required></textarea>
             <button type="submit">Send Message</button>
         </form>
-        <!-- Status message dikhane ke liye -->
+
         <p id="statusMsg"></p>
     </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-     <p>© 2026 House Rent Predictor | Developed by Shayan, Tanu, Shahfahad</p>
+    <p>© 2026 House Rent Predictor | Developed by Shayan, Tanu, Shahfahad</p>
 </footer>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
-<!-- JS: AJAX submit & status -->
 <script>
-document.getElementById("contactForm").addEventListener("submit", function(e) {
-    e.preventDefault(); // Page reload rok diya
+(function(){
+    emailjs.init("61Ing_h0C5h3K40CM"); 
+})();
 
-    let formData = new FormData(this);
+function sendMail(event){
+    event.preventDefault();
 
-    fetch("/contact", {
-        method: "POST",
-        body: formData
+    const status = document.getElementById("statusMsg");
+
+    let params = {
+        from_name: document.getElementById("name").value,
+        from_email: document.getElementById("email").value,
+        message: document.getElementById("message").value
+    };
+
+    emailjs.send("service_5ahythd", "template_zq742lp", params)
+    .then(function(){
+        status.style.color = "green";
+        status.innerText = "Message Sent ✅";
+        document.getElementById("contactForm").reset();
     })
-    .then(response => response.json())
-    .then(data => {
-        let msg = document.getElementById("statusMsg");
-
-        if (data.status === "success") {
-            msg.innerText = "Message sent successfully!";
-            msg.style.color = "green";
-            document.getElementById("contactForm").reset();
-        } else {
-            msg.innerText = "Failed to send message!";
-            msg.style.color = "red";
-        }
-    })
-    .catch(error => {
-        document.getElementById("statusMsg").innerText = "Error occurred!";
-        document.getElementById("statusMsg").style.color = "red";
+    .catch(function(error){
+        status.style.color = "red";
+        status.innerText = "Failed ❌";
+        console.log("ERROR:", error);
     });
-});
+}
 </script>
-
 
 </body>
 </html>
