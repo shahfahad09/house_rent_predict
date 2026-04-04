@@ -7,3 +7,4 @@ joblib
 bcrypt
 python-dotenv
 gunicorn
+psycopg2-binary 
