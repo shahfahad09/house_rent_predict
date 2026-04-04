@@ -118,7 +118,9 @@ def login():
             release_db(conn)
 
         if row:
-            stored_password = row[0]
+          
+            stored_password = bytes(row[0]) 
+            
             if bcrypt.checkpw(password, stored_password):
                 session.clear()
                 session["user"] = row[1]
