@@ -430,34 +430,37 @@ def predict():
 @app.route("/contact", methods=["POST"])
 def contact():
     if "user" not in session:
-        return jsonify({"status": "fail", "message": "Not logged in"})
+        return jsonify({"status": "fail"})
 
     try:
         name = request.form['name']
         email = request.form['email']
         message = request.form['message']
 
-        sender = os.environ.get("EMAIL_USER")
-        password = os.environ.get("EMAIL_PASS")
+        conn = sqlite3.connect("users.db")
+        c = conn.cursor()
 
-        # Check env variables
-        if not sender or not password:
-            return jsonify({"status": "fail", "message": "Email config missing"})
+        # table create (ek baar chalega)
+        c.execute("""
+        CREATE TABLE IF NOT EXISTS contact(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            email TEXT,
+            message TEXT
+        )
+        """)
 
-        msg = f"Subject: Contact Form Message\n\nName: {name}\nEmail: {email}\nMessage: {message}"
+        c.execute("INSERT INTO contact (name,email,message) VALUES (?,?,?)",
+                  (name, email, message))
 
-        # Timeout add kiya (IMPORTANT)
-        server = smtplib.SMTP('smtp.gmail.com', 587, timeout=10)
-        server.starttls()
-        server.login(sender, password)
-        server.sendmail(sender, sender, msg)
-        server.quit()
+        conn.commit()
+        conn.close()
 
         return jsonify({"status": "success"})
 
     except Exception as e:
-        print("Mail Error:", e)  # console me exact error dikhega
-        return jsonify({"status": "fail", "message": str(e)})
+        print("CONTACT ERROR:", e)
+        return jsonify({"status": "fail"})
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":
