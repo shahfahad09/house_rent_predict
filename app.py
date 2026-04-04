@@ -19,8 +19,11 @@ ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123")
 
 # ---------------- DATABASE ----------------
 def init_db():
-    conn = sqlite3.connect("users.db")
+    os.makedirs("/data", exist_ok=True)  # ensure folder exists
+    
+    conn = sqlite3.connect("/data/users.db")  
     c = conn.cursor()
+    
     c.execute("""CREATE TABLE IF NOT EXISTS users(
                  id INTEGER PRIMARY KEY AUTOINCREMENT,
                  first_name TEXT,
@@ -31,6 +34,7 @@ def init_db():
                  dob TEXT,
                  gender TEXT
                  )""")
+    
     conn.commit()
     conn.close()
 
@@ -56,7 +60,7 @@ def signup():
         hashed = bcrypt.hashpw(password, bcrypt.gensalt())
 
         try:
-            conn = sqlite3.connect("users.db")
+            conn = sqlite3.connect("/data/users.db")
             c = conn.cursor()
             c.execute("""INSERT INTO users (first_name, last_name, email, phone, password, dob, gender)
                          VALUES (?,?,?,?,?,?,?)""",
@@ -80,7 +84,7 @@ def login():
         username = request.form.get("email") 
         password = request.form.get("password").encode('utf-8')
 
-        conn = sqlite3.connect("users.db")
+        conn = sqlite3.connect("/data/users.db")
         c = conn.cursor()
         c.execute("SELECT password,email FROM users WHERE email=? OR phone=?", (username, username))
         row = c.fetchone()
@@ -131,7 +135,7 @@ def admin_dashboard():
 def download_db():
     if not session.get("admin"):
         return "Unauthorized", 403
-    return send_file("users.db", as_attachment=True)
+    return send_file("/data/users.db", as_attachment=True)
 
 # ---------------- LOGOUT ----------------
 @app.route("/logout")
