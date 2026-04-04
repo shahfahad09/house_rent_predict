@@ -430,7 +430,7 @@ def predict():
 @app.route("/contact", methods=["POST"])
 def contact():
     if "user" not in session:
-        return jsonify({"status":"fail"})
+        return jsonify({"status": "fail", "message": "Not logged in"})
 
     try:
         name = request.form['name']
@@ -440,19 +440,24 @@ def contact():
         sender = os.environ.get("EMAIL_USER")
         password = os.environ.get("EMAIL_PASS")
 
-        msg = f"Subject: Contact\n\n{name}\n{email}\n{message}"
+        # Check env variables
+        if not sender or not password:
+            return jsonify({"status": "fail", "message": "Email config missing"})
 
-        server = smtplib.SMTP('smtp.gmail.com',587)
+        msg = f"Subject: Contact Form Message\n\nName: {name}\nEmail: {email}\nMessage: {message}"
+
+        # Timeout add kiya (IMPORTANT)
+        server = smtplib.SMTP('smtp.gmail.com', 587, timeout=10)
         server.starttls()
-        server.login(sender,password)
-        server.sendmail(sender,sender,msg)
+        server.login(sender, password)
+        server.sendmail(sender, sender, msg)
         server.quit()
 
-        return jsonify({"status":"success"})
+        return jsonify({"status": "success"})
 
     except Exception as e:
-        print("Mail Error:", e)
-        return jsonify({"status":"fail"})
+        print("Mail Error:", e)  # console me exact error dikhega
+        return jsonify({"status": "fail", "message": str(e)})
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":
