@@ -191,12 +191,11 @@ function sendMail(event){
     event.preventDefault();
 
     const status = document.getElementById("statusMsg");
-
-    let params = {
-        from_name: document.getElementById("name").value,
-        from_email: document.getElementById("email").value,
-        message: document.getElementById("message").value
-    };
+let params = {
+    name: document.getElementById("name").value,
+    email: document.getElementById("email").value,
+    message: document.getElementById("message").value
+};
 
     emailjs.send("service_5ahythd", "template_zq742lp", params)
     .then(function(){
