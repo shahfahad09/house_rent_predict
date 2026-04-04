@@ -247,7 +247,7 @@ ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@gmail.com")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123")
 
 # ---------------- DATABASE PATH ----------------
-DB_PATH = "users.db"   # abhi simple rakho (Render disk baad me add karna)
+DB_PATH = "users.db"  
 
 def get_db():
     return sqlite3.connect(DB_PATH, timeout=10)
