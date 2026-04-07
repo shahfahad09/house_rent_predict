@@ -14,6 +14,7 @@
         <a href="#about">About</a>
         <a href="#predict">Predict</a>
         <a href="#services">Services</a>
+        <a href="#future">Future Projects</a>
         <a href="#contact">Contact</a>
 
         <!-- USER / ADMIN CONTROL -->
@@ -160,6 +161,77 @@
     </div>
 </section>
 
+
+
+
+<!-- FUTURE PROJECTS -->
+<section id="future" class="section">
+    <h1>Future Projects 🚀</h1>
+
+    <!-- PROJECT 1 -->
+    <div class="future-row">
+
+        <!-- TEXT -->
+        <div class="future-text">
+            <h3>🏠 House Price Prediction</h3>
+            <p>
+                A system to predict property buying prices using advanced ML models 
+                based on location, size, and amenities.
+            </p>
+        </div>
+
+        <!-- IMAGE BOX -->
+        <div class="future-image-box">
+            <img src="{{ url_for('static', filename='images/hpp7.jpg') }}">
+            <img src="{{ url_for('static', filename='images/hpp2.jpg') }}">
+            <img src="{{ url_for('static', filename='images/hpp4.jpg') }}">
+            <img src="{{ url_for('static', filename='images/hpp5.jpg') }}">
+        </div>
+    </div>
+
+    <!-- PROJECT 2 (REVERSE) -->
+    <div class="future-row reverse">
+
+        <div class="future-text">
+            <h3>📊 Property Comparison</h3>
+            <p>
+                Compare multiple properties side-by-side based on price, location, 
+                features, and get the best recommendation.
+            </p>
+        </div>
+
+        <div class="future-image-box">
+            <img src="{{ url_for('static', filename='images/Compare.jpg') }}">
+            <img src="{{ url_for('static', filename='images/compare2.jpg') }}">
+            <img src="{{ url_for('static', filename='images/compare3.jpg') }}">
+            <img src="{{ url_for('static', filename='images/compare4.jpg') }}">
+        </div>
+    </div>
+
+    <!-- PROJECT 3 -->
+    <div class="future-row">
+
+        <div class="future-text">
+            <h3>🎓 University Area Rent Predictor</h3>
+            <p>
+                Predict house/flat rent near top Indian universities 
+                within a 10–15 KM radius.
+            </p>
+        </div>
+
+        <div class="future-image-box">
+            <img src="{{ url_for('static', filename='images/un1.jpg') }}">
+            <img src="{{ url_for('static', filename='images/un2.jpg') }}">
+            <img src="{{ url_for('static', filename='images/un3.jpg') }}">
+            <img src="{{ url_for('static', filename='images/un4.jpg') }}">
+        </div>
+    </div>
+
+</section>
+
+
+
+
 <!-- CONTACT -->
 <section id="contact" class="section">
     <h1>Get in Touch</h1>
@@ -191,11 +263,12 @@ function sendMail(event){
     event.preventDefault();
 
     const status = document.getElementById("statusMsg");
-let params = {
-    name: document.getElementById("name").value,
-    email: document.getElementById("email").value,
-    message: document.getElementById("message").value
-};
+
+    let params = {
+        from_name: document.getElementById("name").value,
+        from_email: document.getElementById("email").value,
+        message: document.getElementById("message").value
+    };
 
     emailjs.send("service_5ahythd", "template_zq742lp", params)
     .then(function(){
