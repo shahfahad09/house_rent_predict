@@ -302,3 +302,60 @@ footer {
 
 
 
+
+
+
+
+/* ROW LAYOUT */
+.future-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 40px 0;
+    gap: 30px;
+}
+
+/* REVERSE ROW */
+.future-row.reverse {
+    flex-direction: row-reverse;
+}
+
+/* TEXT */
+.future-text {
+    flex: 1;
+}
+
+/* IMAGE BOX (MAIN BORDER) */
+/* IMAGES FIX */
+/* IMAGE BOX */
+.future-image-box {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    background: #fff;
+}
+
+/* EACH IMAGE SLOT */
+.future-image-box img {
+    width: 100%;
+    height: 100px;          /* fixed height for all images */
+    object-fit: contain;    /* full image visible (no cut) */
+    background: #f4f4f4;    /* empty space fill */
+    border-radius: 5px;
+    padding: 5px;           /* thoda space inside */
+}
+
+/* IMAGES */
+.future-image-box img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+
+
