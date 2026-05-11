@@ -359,3 +359,112 @@ footer {
 
 
 
+
+
+
+
+
+
+
+
+/* RESPONSIVE DESIGN */
+
+@media screen and (max-width: 768px) {
+
+    /* NAVBAR */
+    nav {
+        flex-direction: column;
+        padding: 15px;
+        text-align: center;
+    }
+
+    nav h2 {
+        position: static;
+        margin-bottom: 10px;
+    }
+
+    nav div {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    /* HERO TEXT */
+    .hero-text {
+        font-size: 22px;
+        width: 90%;
+    }
+
+    /* SECTION */
+    .section {
+        padding: 25px 15px;
+    }
+
+    .section img {
+        width: 100%;
+    }
+
+    /* CARDS */
+    .cards {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card {
+        width: 90%;
+        max-width: 300px;
+    }
+
+    /* FORM */
+    form input,
+    form select {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .form-row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form-row input,
+    .form-row select {
+        width: 90%;
+    }
+
+    /* PRE IMAGES */
+    .pre_image_row {
+        grid-template-columns: 1fr;
+    }
+
+    /* CONTACT BOX */
+    .contact-box {
+        width: 90%;
+        padding: 20px;
+    }
+
+    /* FUTURE SECTION */
+    .future-row,
+    .future-row.reverse {
+        flex-direction: column;
+    }
+
+    .future-image-box {
+        width: 100%;
+    }
+
+    .future-image-box img {
+        height: 150px;
+    }
+
+    /* ABOUT TEXT */
+    .section p {
+        padding: 15px;
+        font-size: 15px;
+        text-align: left;
+    }
+
+    /* IMAGE ROW */
+    .image-row img {
+        height: auto;
+    }
+}
