@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>House Rent Predictor</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -256,7 +258,7 @@
 
 <script>
 (function(){
-    emailjs.init("61Ing_h0C5h3K40CM"); 
+    emailjs.init("icd6wv3UwLKOaoM9v"); 
 })();
 
 function sendMail(event){
@@ -270,7 +272,7 @@ function sendMail(event){
         message: document.getElementById("message").value
     };
 
-    emailjs.send("service_5ahythd", "template_zq742lp", params)
+    emailjs.send("service_hwddufq", "template_tm350xs", params)
     .then(function(){
         status.style.color = "green";
         status.innerText = "Message Sent ✅";
