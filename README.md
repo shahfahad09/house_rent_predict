@@ -1,15 +1,23 @@
 # House Rent Predictor 🏠💰
 
-A Machine Learning-based web application that predicts house rent prices based on features like locality, BHK, size, furnishing status, and preferred tenant type. Built using Python, Flask, and Scikit-Learn, and deployed on Render.
+A Machine Learning-based web application that predicts house rent prices based on features like locality, BHK, size, furnishing status, and preferred tenant type. Built using Python, Flask, and Scikit-Learn.
 
 🔗 **Live Demo:** [House Rent Predictor](https://house-rent-predict.onrender.com/)
+
+---
+
+## 🌐 Deployment Details (Important Note ⚠️)
+
+This project is deployed on **Render**. Please note the following regarding the live database:
+* **Database Limitation:** The application uses **Render's Free Tier PostgreSQL** for user authentication (`users.db`). 
+* **30-Day Expiry:** Render's free PostgreSQL databases expire and are automatically deleted **30 days after creation**. If the database expires, user login/signup features might require a database reset or redeployment.
 
 ---
 
 ## 🚀 Features
 
 * **Accurate Predictions:** Utilizes a trained Machine Learning model to estimate house rent.
-* **User Authentication:** Secure user login and signup system powered by SQLite (`users.db`).
+* **User Authentication:** Secure user login and signup system powered by PostgreSQL.
 * **Responsive UI:** Clean, interactive, and user-friendly web interface built with HTML and CSS.
 * **Environment Configuration:** Secure credential management using `.env` files.
 
@@ -19,7 +27,7 @@ A Machine Learning-based web application that predicts house rent prices based o
 
 * **Frontend:** HTML5, CSS3
 * **Backend:** Python, Flask
-* **Database:** SQLite (`users.db` for user authentication)
+* **Database:** PostgreSQL (Free Tier on Render)
 * **Machine Learning:** Scikit-Learn, Pandas, NumPy
 * **Deployment:** Render (configured via `Procfile`)
 
@@ -40,62 +48,4 @@ A Machine Learning-based web application that predicts house rent prices based o
 ├── app.py                  # Main Flask application logic
 ├── model_train.py          # Script to clean data and train the ML model
 ├── requirements.txt        # Python dependencies
-└── users.db                # SQLite database for storing user accounts
-
-
-
-🔧 Installation & Local Setup
-To run this project locally on your machine, follow these steps:
-
-1. Clone the Repository
-Bash
-git clone [https://github.com/shahfahad09/house_rent_predict.git](https://github.com/shahfahad09/house_rent_predict.git)
-cd house_rent_predict
-2. Create a Virtual Environment
-Bash
-# Windows
-python -m venv venv
-venv\Scripts\activate
-
-# macOS/Linux
-python3 -m venv venv
-source venv/bin/activate
-3. Install Dependencies
-Bash
-pip install -r requirements.txt
-4. Setup Environment Variables
-Copy the .env.example file to a new file named .env and configure your secret keys if required.
-
-Bash
-cp .env.example .env
-5. Train the Model (Optional)
-If you want to re-train or generate the model file from the dataset:
-
-Bash
-python model_train.py
-6. Run the Flask Server
-Bash
-python app.py
-Open your browser and navigate to http://127.0.0.1:5000/.
-
-🌐 Deployment
-This project is configured for easy deployment on platforms like Render or Heroku using the provided Procfile.
-
-The live version is currently hosted at:
-👉 https://house-rent-predict.onrender.com/
-
-🤝 Contributing
-Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
-
-Fork the project.
-
-Create your feature branch (git checkout -b feature/AmazingFeature).
-
-Commit your changes (git commit -m 'Add some AmazingFeature').
-
-Push to the branch (git push origin feature/AmazingFeature).
-
-Open a Pull Request.
-
-👤 Author
-MD SHAHFAHAD KHAN - @shahfahad09
+└── users.db                # SQLite database for local testing
